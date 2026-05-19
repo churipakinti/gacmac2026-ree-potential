@@ -11,9 +11,9 @@
 
   <style>
     :root {
-      --ink:      #0E1519;
-      --ink-2:    #1E2D35;
-      --ink-3:    #2E4250;
+      --ink:      #1A2E3B;
+      --ink-2:    #243D4E;
+      --ink-3:    #2E4D62;
       --muted:    #5A7080;
       --muted-2:  #8299A8;
       --paper:    #F5F0E8;
@@ -119,7 +119,7 @@
     }
     .hero-topo svg {
       width: 100%; height: 100%;
-      opacity: 0.18;
+      opacity: 0.28;
     }
 
     /* Grain overlay */
@@ -176,7 +176,7 @@
       margin-top: clamp(24px,3vh,40px);
       max-width: 540px;
       font-size: clamp(0.95rem,1.2vw,1.1rem);
-      color: rgba(255,255,255,0.48);
+      color: rgba(255,255,255,0.62);
       line-height: 1.6;
     }
 
@@ -224,15 +224,15 @@
     }
 
     .conf-block {
-      border: 1px solid rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
       padding: 28px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.07);
       backdrop-filter: blur(8px);
     }
     .conf-label {
       font-family: 'DM Mono', monospace;
       font-size: 0.68rem;
-      color: rgba(255,255,255,0.36);
+      color: rgba(255,255,255,0.50);
       text-transform: uppercase;
       letter-spacing: 0.12em;
       margin-bottom: 12px;
@@ -247,17 +247,17 @@
     .conf-loc {
       margin-top: 10px;
       font-size: 0.88rem;
-      color: rgba(255,255,255,0.42);
+      color: rgba(255,255,255,0.56);
     }
     .conf-stats {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 1px;
       margin-top: 20px;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
     }
     .conf-stat {
       padding: 14px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.06);
       text-align: center;
     }
     .conf-stat strong {
@@ -271,7 +271,7 @@
       display: block;
       margin-top: 4px;
       font-size: 0.74rem;
-      color: rgba(255,255,255,0.36);
+      color: rgba(255,255,255,0.48);
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
@@ -282,31 +282,31 @@
     .quick-item {
       display: flex; align-items: center; gap: 14px;
       padding: 14px 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
       transition: background 140ms ease;
     }
-    .quick-item:hover { background: rgba(255,255,255,0.07); }
+    .quick-item:hover { background: rgba(255,255,255,0.10); }
     .q-num {
       font-family: 'DM Mono', monospace;
       font-size: 0.7rem;
-      color: rgba(255,255,255,0.24);
+      color: rgba(255,255,255,0.36);
       width: 16px; flex-shrink: 0;
     }
     .q-info { flex: 1; min-width: 0; }
     .q-title {
       font-size: 0.88rem; font-weight: 600;
-      color: rgba(255,255,255,0.78);
+      color: rgba(255,255,255,0.88);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .q-sub {
       font-size: 0.76rem;
-      color: rgba(255,255,255,0.32);
+      color: rgba(255,255,255,0.44);
       margin-top: 2px;
     }
     .q-arrow {
       font-size: 0.9rem;
-      color: rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.36);
     }
 
     /* Scroll cue */
@@ -320,13 +320,13 @@
     .hero-footer-label {
       font-family: 'DM Mono', monospace;
       font-size: 0.7rem;
-      color: rgba(255,255,255,0.24);
+      color: rgba(255,255,255,0.40);
       letter-spacing: 0.10em;
       text-transform: uppercase;
     }
     .scroll-cue {
       display: flex; align-items: center; gap: 8px;
-      color: rgba(255,255,255,0.24);
+      color: rgba(255,255,255,0.40);
       font-family: 'DM Mono', monospace;
       font-size: 0.7rem;
       letter-spacing: 0.08em;
@@ -515,11 +515,17 @@
     }
     .res-card:hover { box-shadow: 0 16px 48px rgba(14,21,25,0.08); z-index: 1; }
     .res-icon {
-      width: 44px; height: 44px;
-      background: var(--paper-2);
-      border: 1px solid var(--line);
+      width: 40px; height: 40px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
+      border-bottom: 2px solid var(--indigo);
+    }
+    .res-icon svg {
+      width: 22px; height: 22px;
+      stroke: var(--indigo);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
     .res-card h3 {
       font-family: 'DM Serif Display', serif;
@@ -864,7 +870,9 @@
       <div class="shell">
         <div class="resources-layout">
           <div class="res-card">
-            <div class="res-icon">📄</div>
+            <div class="res-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
             <div class="res-pill">PDF · Poster</div>
             <h3>Conference poster</h3>
             <p>View the poster contribution presented in the SS-03 Pegmatites session at GAC–MAC 2026 St. John's.</p>
@@ -873,7 +881,9 @@
             </a>
           </div>
           <div class="res-card">
-            <div class="res-icon">📚</div>
+            <div class="res-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="12" y1="7" x2="16" y2="7"/><line x1="12" y1="11" x2="16" y2="11"/></svg>
+            </div>
             <div class="res-pill">PDF · References</div>
             <h3>Extended bibliography</h3>
             <p>Access the full reference list supporting the geological and geophysical context of the 3D modelling work.</p>
