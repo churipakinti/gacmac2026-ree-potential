@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,36 +11,31 @@
 
   <style>
     :root {
-      --ink:      #1A2E3B;
-      --ink-2:    #243D4E;
-      --ink-3:    #2E4D62;
-      --muted:    #5A7080;
-      --muted-2:  #8299A8;
-      --paper:    #F5F0E8;
-      --paper-2:  #EDE7D8;
-      --paper-3:  #E2D8C6;
-      --cream:    #FAF7F2;
+      /* ── Core palette – inspired by precambrianearth.com ── */
+      --ink:        #1C2B35;
+      --ink-2:      #2A3D4A;
+      --muted:      #4E6472;
+      --muted-2:    #7A94A2;
 
-      --indigo:   #1B3F6E;
-      --indigo-2: #2B5A9C;
-      --indigo-3: #3D74BC;
-      --indigo-pale: #E8EEFA;
+      --sky:        #C8DDE8;   /* topo-map light blue */
+      --sky-2:      #DDE9F0;
+      --sky-3:      #EEF4F8;
+      --white:      #FFFFFF;
+      --off-white:  #F7FAFB;
 
-      --teal:     #0E6B65;
-      --teal-2:   #138E87;
-      --teal-pale: #DFF4F2;
+      --teal:       #0E7A72;   /* precambrian accent */
+      --teal-2:     #12A097;
+      --teal-pale:  #E0F4F2;
+      --teal-mid:   #B2E0DC;
 
-      --gold:     #9A6C1A;
-      --gold-2:   #C4891E;
-      --gold-pale: #FDF3DF;
+      --blue:       #2B6CB0;
+      --blue-pale:  #E6F0FA;
+      --blue-mid:   #9DC4E8;
 
-      --sand:     #C8B89A;
-      --line:     rgba(14,21,25,0.10);
-      --line-inv: rgba(255,255,255,0.12);
+      --line:       rgba(28,43,53,0.09);
+      --line-sky:   rgba(28,43,53,0.12);
 
       --max: 1320px;
-      --r-xl: 2px;
-      --r-lg: 2px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,7 +43,7 @@
 
     body {
       font-family: 'Instrument Sans', ui-sans-serif, sans-serif;
-      background: var(--cream);
+      background: var(--off-white);
       color: var(--ink);
       line-height: 1.6;
       overflow-x: hidden;
@@ -66,322 +61,347 @@
     .topbar {
       position: sticky; top: 0; z-index: 30;
       background: var(--ink);
-      border-bottom: 1px solid var(--line-inv);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .topbar-inner {
       display: flex; align-items: center;
       justify-content: space-between; gap: 24px;
-      padding: 16px 0;
+      padding: 15px 0;
     }
     .brand {
       display: flex; align-items: center; gap: 12px;
-      color: rgba(255,255,255,0.92);
     }
     .brand-dot {
-      width: 8px; height: 8px; border-radius: 50%;
+      width: 7px; height: 7px; border-radius: 50%;
       background: var(--teal-2); flex-shrink: 0;
       animation: pulse 3s ease-in-out infinite;
     }
     @keyframes pulse {
       0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
+      50%      { opacity: 0.45; transform: scale(0.75); }
     }
     .brand-text {
       font-family: 'DM Mono', monospace;
-      font-size: 0.78rem; font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.72);
+      font-size: 0.76rem; font-weight: 500;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      color: rgba(255,255,255,0.68);
     }
     .nav-links {
       display: flex; align-items: center; gap: 28px;
-      font-size: 0.82rem; font-weight: 500;
+      font-size: 0.81rem; font-weight: 500;
       letter-spacing: 0.04em; text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.50);
     }
-    .nav-links a { transition: color 140ms ease; }
-    .nav-links a:hover { color: rgba(255,255,255,0.92); }
+    .nav-links a { transition: color 130ms; }
+    .nav-links a:hover { color: rgba(255,255,255,0.90); }
 
     /* ─── HERO ───────────────────────────────────────────── */
     .hero {
       min-height: 100svh;
       display: grid;
       grid-template-rows: 1fr auto;
-      background: var(--ink);
+      /* Light sky-topo background like precambrianearth */
+      background: linear-gradient(160deg, var(--sky-2) 0%, var(--sky-3) 50%, var(--white) 100%);
       position: relative;
       overflow: hidden;
     }
 
-    /* Topographic SVG background */
     .hero-topo {
       position: absolute; inset: 0;
       pointer-events: none; z-index: 0;
     }
-    .hero-topo svg {
-      width: 100%; height: 100%;
-      opacity: 0.28;
-    }
-
-    /* Grain overlay */
-    .hero::before {
-      content: "";
-      position: absolute; inset: 0; z-index: 1;
-      pointer-events: none;
-      opacity: 0.035;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 180px;
-    }
+    .hero-topo svg { width: 100%; height: 100%; }
 
     .hero-content {
       position: relative; z-index: 2;
       display: grid;
-      grid-template-columns: minmax(0,1.1fr) minmax(280px,0.9fr);
-      gap: clamp(32px,4vw,72px);
-      align-items: end;
-      padding: clamp(60px,10vh,120px) 0 clamp(48px,6vh,80px);
+      grid-template-columns: minmax(0,1.15fr) minmax(280px,0.85fr);
+      gap: clamp(32px,4vw,64px);
+      align-items: center;
+      padding: clamp(64px,10vh,120px) 0 clamp(48px,6vh,80px);
     }
 
     .hero-left { display: flex; flex-direction: column; }
 
     .eyebrow {
       display: inline-flex; align-items: center; gap: 10px;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
-    .eyebrow-line {
-      width: 32px; height: 1px;
-      background: var(--teal-2);
-    }
+    .eyebrow-line { width: 28px; height: 1px; background: var(--teal); }
     .eyebrow-text {
       font-family: 'DM Mono', monospace;
-      font-size: 0.72rem; font-weight: 500;
-      color: var(--teal-2);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
+      font-size: 0.70rem; font-weight: 500;
+      color: var(--teal); text-transform: uppercase; letter-spacing: 0.13em;
     }
 
     h1 {
       font-family: 'DM Serif Display', serif;
-      font-size: clamp(4rem, 9vw, 9rem);
-      line-height: 0.88;
-      letter-spacing: -0.03em;
-      color: var(--paper);
-      margin-bottom: 0;
+      font-size: clamp(3.8rem, 8.5vw, 8.5rem);
+      line-height: 0.88; letter-spacing: -0.03em;
+      color: var(--ink);
     }
-    h1 em {
-      font-style: italic;
-      color: var(--sand);
-    }
+    h1 em { font-style: italic; color: var(--teal); }
 
     .hero-sub {
-      margin-top: clamp(24px,3vh,40px);
-      max-width: 540px;
-      font-size: clamp(0.95rem,1.2vw,1.1rem);
-      color: rgba(255,255,255,0.62);
-      line-height: 1.6;
+      margin-top: clamp(20px,2.8vh,36px);
+      max-width: 520px;
+      font-size: clamp(0.95rem,1.15vw,1.08rem);
+      color: var(--muted); line-height: 1.65;
     }
 
     .hero-actions {
-      display: flex; flex-wrap: wrap; gap: 12px;
-      margin-top: clamp(28px,3.5vh,48px);
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-top: clamp(26px,3.2vh,44px);
     }
 
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 22px;
-      font-size: 0.84rem; font-weight: 600;
-      letter-spacing: 0.03em;
+      padding: 11px 20px;
+      font-size: 0.83rem; font-weight: 600; letter-spacing: 0.03em;
       border: 1px solid transparent;
-      transition: all 150ms ease;
-      cursor: pointer;
+      transition: all 150ms ease; cursor: pointer;
     }
     .btn-primary {
-      background: var(--paper);
-      color: var(--ink);
-      border-color: var(--paper);
+      background: var(--teal); color: white; border-color: var(--teal);
     }
-    .btn-primary:hover { background: white; transform: translateY(-1px); }
+    .btn-primary:hover { background: var(--teal-2); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(14,122,114,0.28); }
     .btn-ghost {
-      background: transparent;
-      color: rgba(255,255,255,0.64);
-      border-color: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.72); color: var(--ink);
+      border-color: rgba(28,43,53,0.18);
     }
-    .btn-ghost:hover {
-      border-color: rgba(255,255,255,0.38);
-      color: rgba(255,255,255,0.88);
-    }
-    .btn-arrow {
-      font-size: 1rem;
-      transition: transform 150ms ease;
-    }
+    .btn-ghost:hover { border-color: var(--teal); color: var(--teal); background: white; }
+    .btn-arrow { font-size: 1rem; transition: transform 150ms; }
     .btn:hover .btn-arrow { transform: translateX(3px); }
 
-    /* Hero right panel */
+    /* Hero right */
     .hero-right {
-      display: flex; flex-direction: column;
-      gap: 16px;
-      align-self: end;
-      padding-bottom: 4px;
+      display: flex; flex-direction: column; gap: 12px;
     }
 
     .conf-block {
-      border: 1px solid rgba(255,255,255,0.14);
-      padding: 28px;
-      background: rgba(255,255,255,0.07);
-      backdrop-filter: blur(8px);
+      border: 1px solid var(--line-sky);
+      padding: 26px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(28,43,53,0.07);
     }
     .conf-label {
       font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      color: rgba(255,255,255,0.50);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 12px;
+      font-size: 0.66rem; color: var(--muted-2);
+      text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 10px;
     }
     .conf-title {
       font-family: 'DM Serif Display', serif;
-      font-size: clamp(2rem,3.2vw,3rem);
-      color: var(--paper);
-      line-height: 0.92;
-      letter-spacing: -0.04em;
+      font-size: clamp(1.9rem,3vw,2.8rem);
+      color: var(--ink); line-height: 0.92; letter-spacing: -0.04em;
     }
-    .conf-loc {
-      margin-top: 10px;
-      font-size: 0.88rem;
-      color: rgba(255,255,255,0.56);
-    }
+    .conf-loc { margin-top: 8px; font-size: 0.86rem; color: var(--muted); }
     .conf-stats {
       display: grid; grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      margin-top: 20px;
-      border: 1px solid rgba(255,255,255,0.12);
+      gap: 1px; margin-top: 18px;
+      border: 1px solid var(--line);
+      background: var(--line);
     }
     .conf-stat {
-      padding: 14px;
-      background: rgba(255,255,255,0.06);
-      text-align: center;
+      padding: 13px; background: var(--white); text-align: center;
     }
     .conf-stat strong {
       display: block;
       font-family: 'DM Serif Display', serif;
-      font-size: 2.2rem;
-      color: var(--paper);
-      line-height: 1;
+      font-size: 2rem; color: var(--teal); line-height: 1;
     }
     .conf-stat small {
-      display: block;
-      margin-top: 4px;
-      font-size: 0.74rem;
-      color: rgba(255,255,255,0.48);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      display: block; margin-top: 3px;
+      font-size: 0.72rem; color: var(--muted-2);
+      text-transform: uppercase; letter-spacing: 0.06em;
     }
 
-    .quick-items {
-      display: flex; flex-direction: column; gap: 1px;
-    }
+    .quick-items { display: flex; flex-direction: column; gap: 1px; }
     .quick-item {
-      display: flex; align-items: center; gap: 14px;
-      padding: 14px 18px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
-      transition: background 140ms ease;
+      display: flex; align-items: center; gap: 13px;
+      padding: 13px 16px;
+      border: 1px solid var(--line-sky);
+      background: rgba(255,255,255,0.72);
+      transition: background 130ms, border-color 130ms;
     }
-    .quick-item:hover { background: rgba(255,255,255,0.10); }
+    .quick-item:hover { background: white; border-color: var(--teal-mid); }
     .q-num {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.36);
-      width: 16px; flex-shrink: 0;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--muted-2); width: 16px; flex-shrink: 0;
     }
     .q-info { flex: 1; min-width: 0; }
     .q-title {
-      font-size: 0.88rem; font-weight: 600;
-      color: rgba(255,255,255,0.88);
+      font-size: 0.86rem; font-weight: 600; color: var(--ink);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .q-sub {
-      font-size: 0.76rem;
-      color: rgba(255,255,255,0.44);
-      margin-top: 2px;
+    .q-sub { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
+    .quick-resource {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px;
+      border: 1px dashed rgba(28,43,53,0.18);
+      background: transparent;
+      transition: background 130ms, border-color 130ms;
+      margin-top: 8px;
     }
-    .q-arrow {
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.36);
+    .quick-resource:hover { background: rgba(255,255,255,0.60); border-color: var(--teal-mid); }
+    .qr-label {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      color: var(--muted-2); text-transform: uppercase;
+      letter-spacing: 0.10em; white-space: nowrap;
+      padding: 2px 6px; border: 1px solid var(--line-sky);
+      background: rgba(255,255,255,0.5);
     }
+    .qr-text {
+      flex: 1; font-size: 0.84rem; font-weight: 500; color: var(--muted);
+    }
+    .quick-resource .q-arrow { color: var(--muted-2); font-size: 0.82rem; }
 
-    /* Scroll cue */
+    /* hero footer bar */
     .hero-footer {
       position: relative; z-index: 2;
-      display: flex; align-items: center;
-      justify-content: space-between;
-      padding: 18px 0;
-      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0;
+      border-top: 1px solid var(--line-sky);
     }
     .hero-footer-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.40);
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--muted-2); letter-spacing: 0.09em; text-transform: uppercase;
     }
     .scroll-cue {
-      display: flex; align-items: center; gap: 8px;
-      color: rgba(255,255,255,0.40);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--muted-2); letter-spacing: 0.08em; text-transform: uppercase;
       animation: bob 2.4s ease-in-out infinite;
     }
     @keyframes bob {
       0%,100% { transform: translateY(0); }
-      50% { transform: translateY(4px); }
+      50%      { transform: translateY(4px); }
     }
 
     /* ─── SECTION HEADING ────────────────────────────────── */
     .s-head {
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 0 40px;
-      align-items: start;
-      padding: 80px 0 48px;
+      gap: 0 40px; align-items: start;
+      padding: 76px 0 44px;
       border-bottom: 1px solid var(--line);
-      margin-bottom: 48px;
+      margin-bottom: 44px;
     }
     .s-num {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--muted-2);
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      padding-top: 8px;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--muted-2); letter-spacing: 0.10em;
+      text-transform: uppercase; padding-top: 7px;
     }
     .s-title-group { min-width: 0; }
     .s-kicker {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--teal);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 10px;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--teal); text-transform: uppercase;
+      letter-spacing: 0.12em; margin-bottom: 8px;
     }
     .s-title {
       font-family: 'DM Serif Display', serif;
-      font-size: clamp(2.8rem,5.5vw,5.5rem);
-      line-height: 0.9;
-      letter-spacing: -0.04em;
-      color: var(--ink);
+      font-size: clamp(2.6rem,5vw,5rem);
+      line-height: 0.9; letter-spacing: -0.04em; color: var(--ink);
     }
     .s-desc {
-      margin-top: 18px;
-      max-width: 560px;
-      font-size: 0.98rem;
-      color: var(--muted);
-      line-height: 1.6;
+      margin-top: 16px; max-width: 540px;
+      font-size: 0.97rem; color: var(--muted); line-height: 1.6;
+    }
+
+    /* ─── PROJECT SECTION ────────────────────────────────── */
+    #project { background: var(--sky-3); padding-bottom: 80px; }
+
+    .project-layout {
+      display: grid;
+      grid-template-columns: minmax(0,1.1fr) minmax(260px,0.9fr);
+      gap: clamp(24px,3vw,56px);
+    }
+
+    .project-main { display: flex; flex-direction: column; gap: 24px; }
+
+    .project-block {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 28px 32px;
+    }
+    .project-block-title {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--teal); text-transform: uppercase;
+      letter-spacing: 0.11em; margin-bottom: 14px;
+    }
+
+    .goal-list { display: flex; flex-direction: column; gap: 12px; list-style: none; }
+    .goal-item {
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .goal-icon {
+      width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .goal-icon svg {
+      width: 16px; height: 16px; stroke: var(--teal);
+      fill: none; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .goal-text { font-size: 0.94rem; color: var(--ink); line-height: 1.5; }
+    .goal-text strong { color: var(--ink); font-weight: 700; }
+
+    .grant-highlight {
+      margin-top: 4px;
+      padding: 16px 18px;
+      background: var(--teal-pale);
+      border-left: 3px solid var(--teal);
+      font-size: 0.88rem; color: var(--ink); line-height: 1.5;
+    }
+    .grant-highlight em { font-style: italic; color: var(--teal); font-weight: 600; }
+
+    /* team + partners column */
+    .project-side { display: flex; flex-direction: column; gap: 16px; }
+
+    .side-block {
+      background: white; border: 1px solid var(--line);
+      padding: 22px 24px;
+    }
+    .side-block-title {
+      font-family: 'DM Mono', monospace; font-size: 0.66rem;
+      color: var(--muted-2); text-transform: uppercase;
+      letter-spacing: 0.10em; margin-bottom: 14px;
+    }
+
+    .team-list { display: flex; flex-direction: column; gap: 8px; list-style: none; }
+    .team-item {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      align-items: baseline;
+      gap: 0;
+      font-size: 0.88rem;
+    }
+    .team-role {
+      font-family: 'DM Mono', monospace; font-size: 0.64rem;
+      color: var(--muted-2); text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .team-name { font-weight: 600; color: var(--ink); }
+
+    .partner-grid {
+      display: grid; grid-template-columns: repeat(2,1fr);
+      gap: 8px; list-style: none;
+    }
+    .partner-item {
+      padding: 10px 12px;
+      background: var(--sky-3);
+      border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      min-height: 52px;
+    }
+    .partner-logo {
+      max-width: 100%; max-height: 32px;
+      width: auto; height: auto;
+      object-fit: contain;
+      display: block;
     }
 
     /* ─── CONTRIBUTIONS ──────────────────────────────────── */
-    #contributions { background: var(--cream); padding-bottom: 80px; }
+    #contributions { background: var(--off-white); padding-bottom: 80px; }
 
     .cards-grid {
       display: grid;
@@ -397,176 +417,119 @@
       overflow: hidden;
       transition: box-shadow 200ms ease;
     }
-    .contrib-card:hover { box-shadow: 0 20px 60px rgba(14,21,25,0.10); z-index: 1; }
+    .contrib-card:hover { box-shadow: 0 16px 48px rgba(28,43,53,0.09); z-index: 1; }
 
-    .card-stripe {
-      height: 4px;
-      background: var(--indigo);
-    }
+    .card-stripe { height: 3px; background: var(--blue); }
     .card-stripe.teal { background: var(--teal); }
 
     .card-header {
       display: flex; align-items: center;
       justify-content: space-between;
-      padding: 22px 28px 18px;
+      padding: 20px 26px 16px;
       border-bottom: 1px solid var(--line);
     }
     .card-type-badge {
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 5px 10px;
-      background: var(--indigo-pale);
-      border: 1px solid rgba(27,63,110,0.15);
-      font-size: 0.72rem; font-weight: 600;
+      padding: 4px 10px;
+      background: var(--blue-pale);
+      border: 1px solid rgba(43,108,176,0.18);
+      font-size: 0.70rem; font-weight: 600;
       text-transform: uppercase; letter-spacing: 0.07em;
-      color: var(--indigo);
+      color: var(--blue);
     }
     .card-type-badge.teal-badge {
       background: var(--teal-pale);
-      border-color: rgba(14,107,101,0.15);
+      border-color: rgba(14,122,114,0.18);
       color: var(--teal);
     }
     .card-abstract {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--muted-2);
-      letter-spacing: 0.06em;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      color: var(--muted-2); letter-spacing: 0.06em;
     }
 
     .card-body {
-      padding: 28px;
-      flex: 1; display: flex; flex-direction: column;
+      padding: 26px; flex: 1; display: flex; flex-direction: column;
     }
     .card-body h3 {
       font-family: 'DM Serif Display', serif;
-      font-size: clamp(1.5rem, 2.2vw, 2rem);
-      line-height: 1.02;
-      letter-spacing: -0.04em;
-      color: var(--ink);
+      font-size: clamp(1.45rem,2vw,1.9rem);
+      line-height: 1.04; letter-spacing: -0.04em; color: var(--ink);
     }
     .card-subtitle {
-      margin-top: 14px;
-      padding: 12px 16px;
-      background: var(--paper);
-      border-left: 3px solid var(--sand);
-      font-size: 0.86rem;
-      color: var(--muted);
-      font-style: italic;
-      line-height: 1.5;
+      margin-top: 12px; padding: 11px 14px;
+      background: var(--sky-3);
+      border-left: 3px solid var(--sky);
+      font-size: 0.84rem; color: var(--muted);
+      font-style: italic; line-height: 1.5;
     }
     .card-summary {
-      margin-top: 16px;
-      font-size: 0.93rem;
-      color: var(--muted);
-      line-height: 1.55;
+      margin-top: 14px; font-size: 0.91rem;
+      color: var(--muted); line-height: 1.55;
     }
 
     .card-meta {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0;
-      margin-top: auto;
-      padding-top: 24px;
-      border-top: 1px solid var(--line);
+      display: grid; grid-template-columns: repeat(2,1fr);
+      gap: 0; margin-top: auto;
+      padding-top: 22px; border-top: 1px solid var(--line);
     }
     .meta-item {
-      padding: 12px 0;
-      border-right: 1px solid var(--line);
+      padding: 11px 0; border-right: 1px solid var(--line);
     }
-    .meta-item:nth-child(2n) { border-right: none; padding-left: 16px; }
-    .meta-item:nth-child(2n+1) { padding-right: 16px; }
+    .meta-item:nth-child(2n) { border-right: none; padding-left: 14px; }
+    .meta-item:nth-child(2n+1) { padding-right: 14px; }
     .meta-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.66rem;
-      color: var(--muted-2);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 4px;
+      font-family: 'DM Mono', monospace; font-size: 0.64rem;
+      color: var(--muted-2); text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 3px;
     }
-    .meta-value {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--ink-2);
-    }
-
-    /* ─── VISUAL DIVIDER ─────────────────────────────────── */
-    .divider-band {
-      width: 100%;
-      overflow: hidden;
-      height: 1px;
-      background: var(--line);
-      margin: 0;
-    }
+    .meta-value { font-size: 0.86rem; font-weight: 600; color: var(--ink-2); }
 
     /* ─── RESOURCES ──────────────────────────────────────── */
-    #resources { background: var(--paper); padding-bottom: 80px; }
+    #resources { background: var(--sky-3); padding-bottom: 80px; }
 
     .resources-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
     }
     .res-card {
-      background: white;
-      border: 1px solid var(--line);
-      padding: 36px;
-      display: flex; flex-direction: column;
-      gap: 16px;
-      transition: box-shadow 180ms ease;
+      background: white; border: 1px solid var(--line);
+      padding: 34px; display: flex; flex-direction: column;
+      gap: 14px; transition: box-shadow 180ms;
     }
-    .res-card:hover { box-shadow: 0 16px 48px rgba(14,21,25,0.08); z-index: 1; }
+    .res-card:hover { box-shadow: 0 12px 40px rgba(28,43,53,0.08); z-index: 1; }
     .res-icon {
-      width: 40px; height: 40px;
+      width: 36px; height: 36px;
       display: flex; align-items: center; justify-content: center;
-      border-bottom: 2px solid var(--indigo);
+      border-bottom: 2px solid var(--teal);
     }
     .res-icon svg {
-      width: 22px; height: 22px;
-      stroke: var(--indigo);
-      fill: none;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      width: 20px; height: 20px; stroke: var(--teal);
+      fill: none; stroke-width: 1.5;
+      stroke-linecap: round; stroke-linejoin: round;
     }
     .res-card h3 {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.5rem;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
+      font-size: 1.45rem; letter-spacing: -0.04em; line-height: 1.05;
     }
-    .res-card p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.55;
-    }
+    .res-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.55; }
     .res-link-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      margin-top: auto;
-      padding: 11px 18px;
-      background: var(--ink);
-      color: var(--paper);
+      display: inline-flex; align-items: center; gap: 7px;
+      margin-top: auto; padding: 10px 16px;
+      background: var(--ink); color: white;
       border: 1px solid var(--ink);
-      font-size: 0.82rem; font-weight: 600;
-      letter-spacing: 0.03em;
-      align-self: flex-start;
-      transition: all 150ms ease;
+      font-size: 0.81rem; font-weight: 600; letter-spacing: 0.03em;
+      align-self: flex-start; transition: all 150ms;
     }
-    .res-link-btn:hover { background: var(--ink-2); transform: translateY(-1px); }
+    .res-link-btn:hover { background: var(--teal); border-color: var(--teal); transform: translateY(-1px); }
     .res-pill {
       display: inline-flex; align-items: center;
-      padding: 4px 8px;
-      background: var(--paper-2);
-      border: 1px solid var(--line);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      color: var(--muted);
-      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      background: var(--sky-2); border: 1px solid var(--line);
+      font-family: 'DM Mono', monospace; font-size: 0.66rem;
+      color: var(--muted); letter-spacing: 0.06em;
     }
 
     /* ─── CTA BAND ───────────────────────────────────────── */
-    .cta-band {
-      background: var(--ink-2);
-      padding: 52px 0;
-    }
+    .cta-band { background: var(--ink); padding: 48px 0; }
     .cta-inner {
       display: flex; align-items: center;
       justify-content: space-between; gap: 32px;
@@ -574,34 +537,27 @@
     .cta-text strong {
       display: block;
       font-family: 'DM Serif Display', serif;
-      font-size: clamp(1.4rem,2.4vw,2rem);
-      color: var(--paper);
-      letter-spacing: -0.03em;
+      font-size: clamp(1.3rem,2.2vw,1.9rem);
+      color: white; letter-spacing: -0.03em;
     }
     .cta-text span {
-      display: block;
-      margin-top: 6px;
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.42);
+      display: block; margin-top: 5px;
+      font-size: 0.88rem; color: rgba(255,255,255,0.46);
     }
     .btn-cta {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 24px;
-      background: var(--paper);
-      color: var(--ink);
-      border: 1px solid var(--paper);
-      font-size: 0.88rem; font-weight: 600;
-      letter-spacing: 0.03em;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: all 150ms ease;
+      padding: 12px 22px;
+      background: var(--teal-2); color: white;
+      border: 1px solid var(--teal-2);
+      font-size: 0.86rem; font-weight: 600; letter-spacing: 0.03em;
+      white-space: nowrap; flex-shrink: 0; transition: all 150ms;
     }
-    .btn-cta:hover { background: white; transform: translateY(-1px); }
+    .btn-cta:hover { background: var(--teal); transform: translateY(-1px); }
 
     /* ─── FOOTER ─────────────────────────────────────────── */
     footer {
-      background: var(--ink);
-      padding: 32px 0;
+      background: var(--ink-2);
+      padding: 28px 0;
       border-top: 1px solid rgba(255,255,255,0.06);
     }
     .footer-inner {
@@ -609,35 +565,26 @@
       justify-content: space-between; gap: 20px;
     }
     .footer-text {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.36);
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 0.04em;
+      font-size: 0.80rem; color: rgba(255,255,255,0.38);
+      font-family: 'DM Mono', monospace; letter-spacing: 0.04em;
     }
-    .footer-logo {
-      width: 160px; max-height: 56px;
-      object-fit: contain;
-      opacity: 0.72;
-    }
+    .footer-logo { width: 150px; max-height: 52px; object-fit: contain; opacity: 0.75; }
 
     /* ─── RESPONSIVE ─────────────────────────────────────── */
-    @media (max-width: 900px) {
-      .hero-content {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-      .hero-right { align-self: stretch; }
+    @media (max-width: 960px) {
+      .hero-content, .project-layout { grid-template-columns: 1fr; gap: 36px; }
       .cards-grid, .resources-layout { grid-template-columns: 1fr; }
       .cta-inner { flex-direction: column; align-items: flex-start; }
+      .partner-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 640px) {
       .nav-links { display: none; }
-      h1 { font-size: clamp(3.2rem,13vw,5rem); }
-      .s-title { font-size: clamp(2.4rem,9vw,3.6rem); }
-      .s-head { grid-template-columns: 1fr; gap: 0; }
+      h1 { font-size: clamp(3rem,13vw,4.8rem); }
+      .s-title { font-size: clamp(2.2rem,9vw,3.4rem); }
+      .s-head { grid-template-columns: 1fr; }
       .s-num { display: none; }
       .card-meta { grid-template-columns: 1fr; }
-      .meta-item { border-right: none !important; padding: 10px 0 !important; }
+      .meta-item { border-right: none !important; padding: 9px 0 !important; }
     }
   </style>
 </head>
@@ -652,6 +599,7 @@
         <span class="brand-text">REE Research · GAC–MAC 2026</span>
       </div>
       <div class="nav-links">
+        <a href="#project">Project</a>
         <a href="#contributions">Contributions</a>
         <a href="#resources">Resources</a>
       </div>
@@ -662,24 +610,29 @@
   <header class="hero" id="top">
     <div class="hero-topo" aria-hidden="true">
       <svg viewBox="0 0 1400 900" fill="none" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <g stroke="#4A8FC4" stroke-width="1">
-          <path d="M-100 180 C 200 80 340 290 640 170 S 980 30 1500 140"/>
-          <path d="M-100 240 C 190 150 360 350 660 230 S 1010 95 1500 200"/>
-          <path d="M-100 300 C 200 220 380 400 680 290 S 1040 160 1500 260"/>
-          <path d="M-100 360 C 200 285 390 450 700 350 S 1060 220 1500 320"/>
-          <path d="M-100 580 C 220 490 400 660 720 540 S 1080 400 1500 510"/>
-          <path d="M-100 640 C 230 555 420 720 740 600 S 1100 464 1500 570"/>
-          <path d="M-100 700 C 240 618 440 780 760 660 S 1120 520 1500 628"/>
+        <!-- topo contour lines in the sky-blue palette -->
+        <g stroke="#5B9BB8" stroke-width="1.1" stroke-opacity="0.35">
+          <path d="M-100 160 C 200 70 360 270 660 155 S 990 20 1500 125"/>
+          <path d="M-100 220 C 190 138 370 330 670 215 S 1010 85 1500 185"/>
+          <path d="M-100 278 C 200 205 385 375 685 272 S 1045 148 1500 244"/>
+          <path d="M-100 336 C 200 268 395 432 700 330 S 1065 210 1500 302"/>
+          <path d="M-100 560 C 220 472 405 640 720 525 S 1082 384 1500 494"/>
+          <path d="M-100 618 C 230 538 422 710 740 588 S 1102 450 1500 552"/>
+          <path d="M-100 676 C 240 602 440 758 758 646 S 1120 512 1500 610"/>
         </g>
-        <g stroke="#C4891E" stroke-width="0.7" stroke-dasharray="4 8">
-          <path d="M250 -20 C 180 180 290 350 210 560 S 110 720 260 920"/>
-          <path d="M1100 -20 C 1020 180 1130 340 1050 560 S 960 740 1100 920"/>
+        <!-- dashed fault lines, warm blue -->
+        <g stroke="#2B6CB0" stroke-width="0.8" stroke-dasharray="5 10" stroke-opacity="0.28">
+          <path d="M240 -20 C 170 175 285 344 205 558 S 105 715 255 920"/>
+          <path d="M1090 -20 C 1012 174 1120 338 1042 555 S 952 732 1092 920"/>
         </g>
-        <circle cx="340" cy="380" r="180" stroke="#4A8FC4" stroke-width="0.6" fill="none"/>
-        <circle cx="340" cy="380" r="120" stroke="#4A8FC4" stroke-width="0.5" fill="none"/>
-        <circle cx="340" cy="380" r="60" stroke="#4A8FC4" stroke-width="0.4" fill="none"/>
-        <circle cx="1060" cy="520" r="140" stroke="#C4891E" stroke-width="0.5" fill="none"/>
-        <circle cx="1060" cy="520" r="80" stroke="#C4891E" stroke-width="0.4" fill="none"/>
+        <!-- concentric circles: geological survey markers -->
+        <g fill="none" stroke-opacity="0.22">
+          <circle cx="320" cy="370" r="190" stroke="#5B9BB8" stroke-width="0.8"/>
+          <circle cx="320" cy="370" r="126" stroke="#5B9BB8" stroke-width="0.7"/>
+          <circle cx="320" cy="370" r="62"  stroke="#5B9BB8" stroke-width="0.5"/>
+          <circle cx="1080" cy="530" r="150" stroke="#2B6CB0" stroke-width="0.7"/>
+          <circle cx="1080" cy="530" r="86"  stroke="#2B6CB0" stroke-width="0.5"/>
+        </g>
       </svg>
     </div>
 
@@ -692,14 +645,14 @@
           </div>
           <h1>Unlocking<br>Canada's <em>REE</em><br>Potential</h1>
           <p class="hero-sub">
-            GAC–MAC 2026 contributions on REE-bearing pegmatite systems and 3D geological modelling in the Wollaston fold–thrust belt.
+            GAC–MAC 2026 contributions on REE-bearing pegmatite systems and 3D geological modelling in the Wollaston fold–thrust belt, northern Saskatchewan.
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#contributions">
               View contributions <span class="btn-arrow">→</span>
             </a>
-            <a class="btn btn-ghost" href="#resources">
-              Poster files
+            <a class="btn btn-ghost" href="#project">
+              About the project
             </a>
           </div>
         </div>
@@ -725,7 +678,7 @@
             <a class="quick-item" href="#contributions">
               <span class="q-num">01</span>
               <span class="q-info">
-                <span class="q-title">Alan Cardenas-Vera presentation</span>
+                <span class="q-title">Cardenas-Vera presentation</span>
                 <span class="q-sub">May 27 · 11:00–11:20 · Bannerman 1</span>
               </span>
               <span class="q-arrow">→</span>
@@ -733,20 +686,17 @@
             <a class="quick-item" href="#contributions">
               <span class="q-num">02</span>
               <span class="q-info">
-                <span class="q-title">Joseph Bravo poster · board 19</span>
+                <span class="q-title">Bravo poster · board 19</span>
                 <span class="q-sub">May 26–27 · SS-03 poster session</span>
               </span>
               <span class="q-arrow">→</span>
             </a>
-            <a class="quick-item" href="#resources">
-              <span class="q-num">03</span>
-              <span class="q-info">
-                <span class="q-title">Poster PDF + reference list</span>
-                <span class="q-sub">Download files</span>
-              </span>
-              <span class="q-arrow">→</span>
-            </a>
           </div>
+          <a class="quick-resource" href="#resources">
+            <span class="qr-label">Resources</span>
+            <span class="qr-text">Poster PDF + reference list</span>
+            <span class="q-arrow">→</span>
+          </a>
         </aside>
       </div>
     </div>
@@ -761,6 +711,94 @@
 
   <main>
 
+    <!-- PROJECT OVERVIEW -->
+    <section id="project">
+      <div class="shell">
+        <div class="s-head">
+          <span class="s-num">00</span>
+          <div class="s-title-group">
+            <p class="s-kicker">NSERC Alliance Missions</p>
+            <h2 class="s-title">Project overview</h2>
+            <p class="s-desc">Critical minerals grant in collaboration with industry partners, focused on REE systems in northern Saskatchewan.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="shell">
+        <div class="project-layout">
+
+          <div class="project-main">
+            <div class="project-block">
+              <p class="project-block-title">Research goals</p>
+              <ul class="goal-list">
+                <li class="goal-item">
+                  <span class="goal-icon">
+                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <span class="goal-text"><strong>Investigate REE critical mineral systems</strong> and their tectonic-magmatic framework, hosted in pegmatites along the Wollaston Domain boundary in northern Saskatchewan.</span>
+                </li>
+                <li class="goal-item">
+                  <span class="goal-icon">
+                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <span class="goal-text"><strong>Produce exploration toolkits</strong> to assist in the exploration of REE pegmatite resources in Saskatchewan and beyond.</span>
+                </li>
+                <li class="goal-item">
+                  <span class="goal-icon">
+                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                  <span class="goal-text">Ore characterization (e.g., monazite) for the new <strong>Rare Earth Processing Facility</strong> in Saskatoon.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="project-block">
+              <p class="project-block-title">New — May 2025</p>
+              <div class="grant-highlight">
+                <em>NERC-NSERC UK-Canada Sustainable Critical Minerals Research Partnerships</em> grant in collaboration with the British Geological Survey — to develop exploration and fertility indicators and a multi-method exploration toolkit.
+              </div>
+            </div>
+          </div>
+
+          <div class="project-side">
+            <div class="side-block">
+              <p class="side-block-title">University of Saskatchewan team</p>
+              <ul class="team-list">
+                <li class="team-item"><span class="team-role">PI</span><span class="team-name">Camille Partin</span></li>
+                <li class="team-item"><span class="team-role">Co-I</span><span class="team-name">Irvine Annesley</span></li>
+                <li class="team-item"><span class="team-role">Collab.</span><span class="team-name">Tania Martins</span></li>
+                <li class="team-item"><span class="team-role">PDF</span><span class="team-name">Claudia Santos</span></li>
+                <li class="team-item"><span class="team-role">PDF</span><span class="team-name">Alan Cardenas-Vera</span></li>
+                <li class="team-item"><span class="team-role">PhD Cand.</span><span class="team-name">Joseph Bravo</span></li>
+              </ul>
+            </div>
+
+            <div class="side-block">
+              <p class="side-block-title">Funders &amp; partners</p>
+              <ul class="partner-grid">
+                <li class="partner-item">
+                  <img src="assets/partners/nserc.png" alt="NSERC / CRSNG" class="partner-logo" />
+                </li>
+                <li class="partner-item">
+                  <img src="assets/partners/searchlight.png" alt="Searchlight Resources" class="partner-logo" />
+                </li>
+                <li class="partner-item">
+                  <img src="assets/partners/skyharbour.png" alt="Skyharbour Resources" class="partner-logo" />
+                </li>
+                <li class="partner-item">
+                  <img src="assets/partners/terra.png" alt="Terra Clean Energy" class="partner-logo" />
+                </li>
+                <li class="partner-item">
+                  <img src="assets/partners/src.png" alt="Saskatchewan Research Council" class="partner-logo" />
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
     <!-- CONTRIBUTIONS -->
     <section id="contributions">
       <div class="shell">
@@ -769,7 +807,7 @@
           <div class="s-title-group">
             <p class="s-kicker">GAC–MAC 2026 St. John's</p>
             <h2 class="s-title">Contributions</h2>
-            <p class="s-desc">One oral presentation and one poster in the SS-03 Pegmatites session, focused on REE-bearing systems and regional 3D geological context in northern Saskatchewan.</p>
+            <p class="s-desc">One oral presentation and one poster in the SS-03 Pegmatites session, focused on REE-bearing systems and 3D geological context in northern Saskatchewan.</p>
           </div>
         </div>
       </div>
@@ -777,7 +815,6 @@
       <div class="shell">
         <div class="cards-grid">
 
-          <!-- Card 1: Talk -->
           <article class="contrib-card">
             <div class="card-stripe"></div>
             <div class="card-header">
@@ -813,7 +850,6 @@
             </div>
           </article>
 
-          <!-- Card 2: Poster -->
           <article class="contrib-card">
             <div class="card-stripe teal"></div>
             <div class="card-header">
